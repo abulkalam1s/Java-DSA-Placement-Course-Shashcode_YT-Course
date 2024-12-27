@@ -35,6 +35,7 @@ There are two types of modifiers in Java: access modifiers and non-access modifi
 2. Default: The access level of a default modifier is only within the package. It cannot be accessed from outside the package. If you do not specify any access level, it will be the default.
 The default access modifier is also called package-private.
 
+(**1 see detailed below)
 3. Protected: The access level of a protected modifier is within the package and outside the package through child class. If you do not make the child class, it cannot be accessed from outside the package.
 
 4. Public: The access level of a public modifier is everywhere. It can be accessed from within the class, outside the class, within the package and outside the package.
@@ -89,3 +90,69 @@ Practically we serialized only those fields which represent a state of instance,
 6. volatile - Using volatile is yet another way (like synchronized, atomic wrapper) of making class thread-safe. Thread-safe means that a method or class instance can be used by multiple threads at the same time without any problem. volatile keyword here makes sure that the changes made in one thread are immediately reflect in other thread
 
 7. native - The native keyword in Java is applied to a method to indicate that the method is implemented in native code. The methods which are implemented in C, C++ are called native methods or foreign methods. native keyword can only be applied to those methods.
+_______________________________________________________________________________________________________________________
+_______________________________________________________________________________________________________________________
+
+**1 :- 
+Here’s an example to demonstrate the **protected** access modifier in Java:
+
+### Package: `mypackage`
+
+#### Parent Class: `Animal.java`
+`````````````````````````````````````````````````````````````````````````````````
+package mypackage;
+
+public class Animal {
+    protected void display() {
+        System.out.println("This is a protected method in the Animal class.");
+    }
+}
+`````````````````````````````````````````````````````````````````````````````````
+
+### Package: `anotherpackage`
+
+#### Child Class: `Dog.java`
+`````````````````````````````````````````````````````````````````````````````````
+package anotherpackage;
+
+import mypackage.Animal;
+
+public class Dog extends Animal {
+    public void show() {
+        // Accessing the protected method of the parent class
+        display();
+    }
+}
+`````````````````````````````````````````````````````````````````````````````````
+#### Non-Child Class: `Test.java`
+`````````````````````````````````````````````````````````````````````````````````
+package anotherpackage;
+
+import mypackage.Animal;
+
+public class Test {
+    public static void main(String[] args) {
+        Animal animal = new Animal();
+        // animal.display(); // This will cause a compilation error because 'display' is protected
+
+        Dog dog = new Dog();
+        dog.show(); // Works because Dog is a subclass of Animal
+    }
+}
+`````````````````````````````````````````````````````````````````````````````````
+### Explanation:
+
+1. **Within Package**:
+   - In the `mypackage` package, any class (like a sibling class to `Animal`) can access the `protected` method `display()`.
+
+2. **Outside the Package**:
+   - A subclass (`Dog`) in the `anotherpackage` package can access the `protected` method through inheritance.
+   - However, a non-subclass (`Test`) cannot directly access the `protected` method, even if it's in the same package as the subclass.
+
+### Output:
+When `Test` is run, it will print:
+`````````````````````````````````````````````````````````````````````````````````
+This is a protected method in the Animal class.
+`````````````````````````````````````````````````````````````````````````````````
+
+This demonstrates that **protected** members can be accessed in a child class outside the package, but not directly in a non-child class. 
